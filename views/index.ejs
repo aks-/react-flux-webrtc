@@ -5,7 +5,17 @@
     <link rel='stylesheet' href='/stylesheets/style.css' />
   </head>
   <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
+    <div class="container">
+      <div id="buttons">
+        <button id="qvga">320x240</button>
+        <button id="vga">640x480</button>
+        <button id="hd">1280x720</button>
+        <button id="full-hd">1920x1080</button>
+      </div>
+
+      <video id="local-video" autoplay></video>
+    </div>
+    <script src="/javascripts/webrtc/adapter.js"></script>
+    <script src="/javascripts/main.js"></script>
   </body>
 </html>
