@@ -21,6 +21,47 @@ var isInitiator = false;
 var isRemoteUserPresent = false;
 var hasAudioSupport = false;
 var hasVideoSupport = false;
+var audioConstraints = { audio: true };
+var vgaConstraints = {
+  video: {
+    width: {
+      exact: 640
+    },
+    height: {
+      exact: 480
+    }
+  },
+  audio: true
+};
+var qvgaConstraints = {
+  video: {
+    width: {
+      exact: 320
+    },
+    height: {
+      exact: 240
+    }
+  },
+  audio: true
+};
+var hdConstraints = {
+  video: {
+    width: 1280,
+    height: 720
+  },
+  audio: true
+};
+var fullHdConstraints = {
+  video: {
+    width: {
+      exact: 1920
+    },
+    height: {
+      exact: 1080
+    }
+  },
+  audio: true
+};
 
 videoCallButton.disabeld = true;
 audioCallButton.disabled = true;
@@ -50,49 +91,11 @@ function start() {
   getUserMedia({ audio: true, video: true }, successCallback, errorCallback);
 }
 
-function gotAudioStream(stream) {
-  trace('Received local audio stream.');
-  localAudio.src = URL.createObjectURL(stream);
-  localStream = stream;
-  audioCallButton.disabled = false;
-}
-
-function gotRemoteAudioStream(event) {
-  remoteAudio.src = URL.createObjectURL(event.stream);
-  trace('Received audio from remote.');
-}
-
-function gotStream(event) {
-  remoteVideo.src = URL.createObjectURL(event.stream);
-}
-
-function gotRemoteStream(event) {
-  remoteVideo.src = URL.createObjectURL(event.stream);
-  trace('Received video from remote.');
-}
-
-function createPeerConnections(type) {
-    //Using no signaling process atm
-    var servers = null;
-
-    localPeerConnection = new RTCPeerConnection(servers);
-    trace('Created local peer connection object.');
-    localPeerConnection.onicecandidate = gotLocalIceCandidate;
-
-    remotePeerConnection = new RTCPeerConnection(servers);
-    trace('Created remote peer connection objects.');
-    remotePeerConnection.onicecandidate = gotRemoteIceCandidate;
-    remotePeerConnection = (type === 'audio') ? gotRemoteAudioStream : gotRemoteStream;
-
-    localPeerConnection.addStream(localStream);
-    trace('Added localstream to localPeerConnection');
-    localPeerConnection.createOffer(gotLocalDescription, handleError);
-}
-
 function audioCall() {
   if (hasAudioSupport) {
-    navigator.getUserMedia(audioConstraints, gotAudioStream, errorCallback);
-    hangupButton.disabled = false;
+    setTimeout(function() {
+      navigator.getUserMedia(audioConstraints, gotAudioStream, errorCallback);
+    });
     createPeerConnections('audio');
   } else {
     console.log('Something went wrong while starting audioCall');
@@ -104,6 +107,21 @@ function videoCall() {
   } else {
     console.log('Something went wrong while starting videoCall');
   }
+}
+
+function hangup() {
+  trace('Hanging up.');
+  localPeerConnection.close();
+  remotePeerConnection.close();
+  localPeerConnection = null;
+  remotePeerConnection = null;
+  hangupButton.disabled = true;
+  audioCallButton.disabled = false;
+  videoCallButton.disabled = false;
+  localAudio.src = '';
+  remoteAudio.src = '';
+  localVideo.src = '';
+  remoteVideo.src = '';
 }
 
 /* vgaButton.onclick = function() { */
@@ -122,51 +140,45 @@ function videoCall() {
   // getMedia(fullHdConstraints);
 /* }; */
 
-var audioConstraints = { audio: true };
+function createPeerConnections(type) {
+    //Using no signaling process atm
+    var servers = null;
 
-var vgaConstraints = {
-  video: {
-    width: {
-      exact: 640
-    },
-    height: {
-      exact: 480
-    }
-  },
-  audio: true
-};
+    localPeerConnection = new RTCPeerConnection(servers);
+    trace('Created local peer connection object.');
+    localPeerConnection.onicecandidate = gotLocalIceCandidate;
 
-var qvgaConstraints = {
-  video: {
-    width: {
-      exact: 320
-    },
-    height: {
-      exact: 240
-    }
-  },
-  audio: true
-};
+    remotePeerConnection = new RTCPeerConnection(servers);
+    trace('Created remote peer connection objects.');
+    remotePeerConnection.onicecandidate = gotRemoteIceCandidate;
+    remotePeerConnection.onaddstream = (type === 'audio') ? gotRemoteAudioStream : gotRemoteStream;
 
-var hdConstraints = {
-  video: {
-    width: 1280,
-    height: 720
-  },
-  audio: true
-};
+    localPeerConnection.addStream(localStream);
+    trace('Added localstream to localPeerConnection');
+    localPeerConnection.createOffer(gotLocalDescription, handleError);
+}
 
-var fullHdConstraints = {
-  video: {
-    width: {
-      exact: 1920
-    },
-    height: {
-      exact: 1080
-    }
-  },
-  audio: true
-};
+function gotAudioStream(stream) {
+  trace('Received local audio stream.');
+  localAudio.src = URL.createObjectURL(stream);
+  localStream = stream;
+  audioCallButton.disabled = true;
+  hangupButton.disabled = false;
+}
+
+function gotRemoteAudioStream(event) {
+  remoteAudio.src = URL.createObjectURL(event.stream);
+  trace('Received audio from remote.');
+}
+
+function gotStream(event) {
+  remoteVideo.src = URL.createObjectURL(event.stream);
+}
+
+function gotRemoteStream(event) {
+  remoteVideo.src = URL.createObjectURL(event.stream);
+  trace('Received video from remote.');
+}
 
 function getMedia(constraints) {
   if (stream) {
@@ -180,7 +192,7 @@ function getMedia(constraints) {
 }
 
 function successCallback(stream) {
-  window.localStream = stream;
+  localStream = stream;
   attachMediaStream(localVideo, localStream);
 }
 
@@ -191,8 +203,6 @@ function errorCallback(error) {
 function trace(text) {
   console.log((performance.now() / 1000).toFixed(3) + ': ' + text);
 }
-
-function hangup() {}
 
 // It creates an offer to the remotePeer, where remotePeer generates answer with
 // localPeer's description which creates the session for them
