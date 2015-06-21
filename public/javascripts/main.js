@@ -16,6 +16,8 @@ var remoteStream;
 var localPeerConnection;
 var remotePeerConnection;
 var isChannelReady;
+var isAudioCall;
+var isVideoCall;
 var isCallStarted = false;
 var isInitiator = false;
 var isRemoteUserPresent = false;
@@ -93,9 +95,8 @@ function start() {
 
 function audioCall() {
   if (hasAudioSupport) {
-    setTimeout(function() {
-      navigator.getUserMedia(audioConstraints, gotAudioStream, errorCallback);
-    });
+    isAudioCall = true;
+    getMedia(audioConstraints, gotAudioStream);
     createPeerConnections('audio');
   } else {
     console.log('Something went wrong while starting audioCall');
@@ -151,7 +152,7 @@ function createPeerConnections(type) {
     remotePeerConnection = new RTCPeerConnection(servers);
     trace('Created remote peer connection objects.');
     remotePeerConnection.onicecandidate = gotRemoteIceCandidate;
-    remotePeerConnection.onaddstream = (type === 'audio') ? gotRemoteAudioStream : gotRemoteStream;
+    remotePeerConnection.onaddstream = (type === 'audio') ? gotRemoteAudioStream : gotRemoteVideoStream;
 
     localPeerConnection.addStream(localStream);
     trace('Added localstream to localPeerConnection');
@@ -160,40 +161,52 @@ function createPeerConnections(type) {
 
 function gotAudioStream(stream) {
   trace('Received local audio stream.');
-  localAudio.src = URL.createObjectURL(stream);
   localStream = stream;
+  attachMediaStream(localAudio, localStream);
   audioCallButton.disabled = true;
   hangupButton.disabled = false;
 }
 
+function gotVideoStream(stream) {
+  localStream = stream;
+  attachMediaStream(localVideo, localStream);
+  videoCallButton.disabled = true;
+  hangupButton.disabled = false;
+}
+
 function gotRemoteAudioStream(event) {
-  remoteAudio.src = URL.createObjectURL(event.stream);
+  remoteStream = event.stream;
+  attachMediaStream(remoteAudio, remoteStream);
   trace('Received audio from remote.');
 }
 
-function gotStream(event) {
-  remoteVideo.src = URL.createObjectURL(event.stream);
-}
-
-function gotRemoteStream(event) {
-  remoteVideo.src = URL.createObjectURL(event.stream);
+function gotRemoteVideoStream(event) {
+  remoteStream = event.stream;
+  attachMediaStream(remoteVideo, remoteStream);
   trace('Received video from remote.');
 }
 
-function getMedia(constraints) {
-  if (stream) {
-    localVideo.src = null;
-    stream.stop();
+function getMedia(constraints, successCallback) {
+  if (typeof successCallback !== 'function') {
+    return;
+  }
+
+  if (localStream) {
+    if (isAudioCall) {
+      localAudio.src = null;
+    }
+    if (isVideoCall) {
+      localVideo.src = null;
+    }
+    localStream.stop();
+    if (remoteStream) {
+      remoteStream.stop();
+    }
   }
 
   setTimeout(function() {
     navigator.getUserMedia(constraints, successCallback, errorCallback);
   });
-}
-
-function successCallback(stream) {
-  localStream = stream;
-  attachMediaStream(localVideo, localStream);
 }
 
 function errorCallback(error) {
