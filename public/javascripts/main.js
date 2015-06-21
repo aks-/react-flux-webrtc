@@ -23,7 +23,7 @@ var isInitiator = false;
 var isRemoteUserPresent = false;
 var hasAudioSupport = false;
 var hasVideoSupport = false;
-var audioConstraints = { audio: true };
+var audioConstraints = {audio: true};
 var vgaConstraints = {
   video: {
     width: {
@@ -90,14 +90,16 @@ function start() {
       trace('Using audio device: ', stream.getAudioTracks()[0].label);
     };
   };
-  getUserMedia({ audio: true, video: true }, successCallback, errorCallback);
+  getUserMedia({audio: true, video: true}, successCallback, errorCallback);
 }
 
 function audioCall() {
   if (hasAudioSupport) {
     isAudioCall = true;
     getMedia(audioConstraints, gotAudioStream);
-    createPeerConnections('audio');
+    setTimeout(function() {
+      createPeerConnections('audio')
+    }, 3000);
   } else {
     console.log('Something went wrong while starting audioCall');
   }
@@ -107,7 +109,9 @@ function videoCall() {
   if (hasVideoSupport) {
     isVideoCall = true;
     getMedia({audio: true, video: true}, gotVideoStream);
-    createPeerConnections('video');
+    setTimeout(function() {
+      createPeerConnections('video');
+    }, 3000);
   } else {
     console.log('Something went wrong while starting videoCall');
   }
