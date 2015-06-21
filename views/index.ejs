@@ -6,14 +6,26 @@
   </head>
   <body>
     <div class="container">
-      <div id="buttons">
+<!--      <div id="dimentionButtons">
         <button id="qvga">320x240</button>
         <button id="vga">640x480</button>
         <button id="hd">1280x720</button>
         <button id="full-hd">1920x1080</button>
       </div>
-
-      <video id="local-video" autoplay></video>
+      -->
+      <div id="videos">
+        <video id="localVideo" autoplay></video>
+        <video id="remoteVideo" autoplay muted></video>
+      </div>
+      <div id="audios">
+        <audio id="localAudio" autoplay></video>
+        <audio id="remoteAudio" autoplay muted></video>
+      </div>
+      <div id="controls">
+        <button id="audioCall">Audio Call</button>
+        <button id="videoCall">Video Call</button>
+        <button id="hangup">Hangup</button>
+      </div>
     </div>
     <script src="/javascripts/webrtc/adapter.js"></script>
     <script src="/javascripts/main.js"></script>
