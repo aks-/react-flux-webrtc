@@ -105,6 +105,9 @@ function audioCall() {
 
 function videoCall() {
   if (hasVideoSupport) {
+    isVideoCall = true;
+    getMedia({audio: true, video: true}, gotVideoStream);
+    createPeerConnections('video');
   } else {
     console.log('Something went wrong while starting videoCall');
   }
