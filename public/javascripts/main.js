@@ -29,9 +29,7 @@ videoCallButton.onclick = videoCall;
 hangupButton.onclick = hangup;
 
 //start the application
-(function init() {
-  start();
-})();
+start();
 
 function start() {
   var successCallback = function(stream) {
