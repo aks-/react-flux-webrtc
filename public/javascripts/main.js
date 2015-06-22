@@ -7,6 +7,7 @@ var remoteAudio = document.querySelector('#remoteAudio');
 var audioCallButton = document.querySelector('#audioCall');
 var videoCallButton = document.querySelector('#videoCall');
 var hangupButton = document.querySelector('#hangup');
+var videosDiv = document.querySelector('#videos');
 var localStream;
 var remoteStream;
 var localPeerConnection;
@@ -24,6 +25,7 @@ var audioConstraints = {audio: true};
 videoCallButton.disabled = true;
 audioCallButton.disabled = true;
 hangupButton.disabled = true;
+videosDiv.style.display = 'none'
 audioCallButton.onclick = audioCall;
 videoCallButton.onclick = videoCall;
 hangupButton.onclick = hangup;
@@ -64,6 +66,7 @@ function videoCall() {
   cleanPriorAudioCallIfAny();
   if (hasVideoSupport) {
     isVideoCall = true;
+    videosDiv.style.display = 'block';
     getMedia({audio: true, video: true}, gotVideoStream);
     setTimeout(function() {
       createPeerConnection();
@@ -86,6 +89,7 @@ function hangup() {
   remoteAudio.src = '';
   localVideo.src = '';
   remoteVideo.src = '';
+  videosDiv.style.display = 'none';
 }
 
 function createPeerConnection() {
