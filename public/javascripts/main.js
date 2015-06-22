@@ -4,10 +4,6 @@ var localVideo = document.querySelector('#localVideo');
 var remoteVideo = document.querySelector('#remoteVideo');
 var localAudio = document.querySelector('#localAudio');
 var remoteAudio = document.querySelector('#remoteAudio');
-/* var vgaButton = document.querySelector('#vga'); */
-// var qvgaButton = document.querySelector('#qvga');
-// var hdButton = document.querySelector('#hd');
-/* var fullHdButton = document.querySelector('#full-hd'); */
 var audioCallButton = document.querySelector('#audioCall');
 var videoCallButton = document.querySelector('#videoCall');
 var hangupButton = document.querySelector('#hangup');
@@ -24,46 +20,6 @@ var isRemoteUserPresent = false;
 var hasAudioSupport = false;
 var hasVideoSupport = false;
 var audioConstraints = {audio: true};
-var vgaConstraints = {
-  video: {
-    width: {
-      exact: 640
-    },
-    height: {
-      exact: 480
-    }
-  },
-  audio: true
-};
-var qvgaConstraints = {
-  video: {
-    width: {
-      exact: 320
-    },
-    height: {
-      exact: 240
-    }
-  },
-  audio: true
-};
-var hdConstraints = {
-  video: {
-    width: 1280,
-    height: 720
-  },
-  audio: true
-};
-var fullHdConstraints = {
-  video: {
-    width: {
-      exact: 1920
-    },
-    height: {
-      exact: 1080
-    }
-  },
-  audio: true
-};
 
 videoCallButton.disabeld = true;
 audioCallButton.disabled = true;
@@ -94,6 +50,7 @@ function start() {
 }
 
 function audioCall() {
+  cleanPriorVideoCallIfAny();
   if (hasAudioSupport) {
     isAudioCall = true;
     getMedia(audioConstraints, gotAudioStream);
@@ -106,6 +63,7 @@ function audioCall() {
 }
 
 function videoCall() {
+  cleanPriorAudioCallIfAny();
   if (hasVideoSupport) {
     isVideoCall = true;
     getMedia({audio: true, video: true}, gotVideoStream);
@@ -132,22 +90,6 @@ function hangup() {
   remoteVideo.src = '';
 }
 
-/* vgaButton.onclick = function() { */
-  // getMedia(vgaConstraints);
-// };
-
-// qvgaButton.onclick = function() {
-  // getMedia(qvgaConstraints);
-// };
-
-// hdButton.onclick = function() {
-  // getMedia(hdConstraints);
-// };
-
-// fullHdButton.onclick = function() {
-  // getMedia(fullHdConstraints);
-/* }; */
-
 function createPeerConnections(type) {
     //Using no signaling process atm
     var servers = null;
@@ -164,6 +106,22 @@ function createPeerConnections(type) {
     localPeerConnection.addStream(localStream);
     trace('Added localstream to localPeerConnection');
     localPeerConnection.createOffer(gotLocalDescription, handleError);
+}
+
+function cleanPriorAudioCallIfAny() {
+  if (localStream && localAudio.src !== '') {
+    localStream = null;
+    localAudio.src = '';
+    remoteAudio.src = '';
+  }
+}
+
+function cleanPriorVideoCallIfAny() {
+  if (localStream && localVideo.src !== '') {
+    localStream = null;
+    localVideo.src = '';
+    remoteVideo.src = '';
+  }
 }
 
 function gotAudioStream(stream) {
