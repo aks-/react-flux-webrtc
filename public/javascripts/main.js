@@ -21,7 +21,7 @@ var hasAudioSupport = false;
 var hasVideoSupport = false;
 var audioConstraints = {audio: true};
 
-videoCallButton.disabeld = true;
+videoCallButton.disabled = true;
 audioCallButton.disabled = true;
 hangupButton.disabled = true;
 audioCallButton.onclick = audioCall;
