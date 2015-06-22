@@ -53,7 +53,7 @@ function audioCall() {
     isAudioCall = true;
     getMedia(audioConstraints, gotAudioStream);
     setTimeout(function() {
-      createPeerConnections('audio')
+      createPeerConnection();
     }, 3000);
   } else {
     console.log('Something went wrong while starting audioCall');
@@ -66,7 +66,7 @@ function videoCall() {
     isVideoCall = true;
     getMedia({audio: true, video: true}, gotVideoStream);
     setTimeout(function() {
-      createPeerConnections('video');
+      createPeerConnection();
     }, 3000);
   } else {
     console.log('Something went wrong while starting videoCall');
@@ -88,7 +88,15 @@ function hangup() {
   remoteVideo.src = '';
 }
 
-function createPeerConnections(type) {
+function createPeerConnection() {
+  if (isAudioCall) {
+    createPeerConnection('audio');
+  } else {
+    createPeerConnection('video');
+  }
+}
+
+function createPeerConnection(type) {
     //Using no signaling process atm
     var servers = null;
 
