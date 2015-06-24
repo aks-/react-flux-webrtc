@@ -19,7 +19,7 @@ var isRemoteUserPresent = false;
 var hasAudioSupport = false;
 var hasVideoSupport = false;
 var audioConstraints = {audio: true};
-var peerConnection = new makePeerConnection();
+var peerConnection = makePeerConnection();
 
 videoCallButton.disabled = true;
 audioCallButton.disabled = true;
