@@ -1,0 +1,78 @@
+var peerConnection = (function() {
+  var trace, localPeerConnection, remotePeerConnection;
+
+  function initialize(t) {
+    trace = t;
+  }
+
+  function createConnection(servers, gotStream, localStream) {
+    //Using no signaling process atm
+    localPeerConnection = new RTCPeerConnection(servers);
+    trace('Created local peer connection object.');
+    localPeerConnection.onicecandidate = gotLocalIceCandidate;
+
+    remotePeerConnection = new RTCPeerConnection(servers);
+    trace('Created remote peer connection objects.');
+    remotePeerConnection.onicecandidate = gotRemoteIceCandidate;
+    remotePeerConnection.onaddstream = gotStream;
+
+    localPeerConnection.addStream(localStream);
+    trace('Added localstream to localPeerConnection');
+    localPeerConnection.createOffer(gotLocalDescription, handleError);
+  }
+
+  function gotLocalDescription(description) {
+    localPeerConnection.setLocalDescription(description);
+    trace('Offer from localPeerConnection: \n', description.sdp);
+    remotePeerConnection.setRemoteDescription(description);
+    remotePeerConnection.createAnswer(gotRemoteDescription, handleError);
+  }
+
+  function gotRemoteDescription(description) {
+    remotePeerConnection.setLocalDescription(description);
+    trace('Answer from remotePeerConnection: \n', description.sdp);
+    localPeerConnection.setRemoteDescription(description);
+  }
+
+  function gotLocalIceCandidate(event) {
+    if (event.candidate) {
+      remotePeerConnection.addIceCandidate(new RTCIceCandidate(event.candidate));
+      trace('Local ICE candidate: \n', event.candidate.candidate);
+    }
+  }
+
+  function gotRemoteIceCandidate(event) {
+    if (event.candidate) {
+      localPeerConnection.addIceCandidate(new RTCIceCandidate(event.candidate));
+      trace('Remote ICE candidate: \n', event.candidate.candidate);
+    }
+  }
+
+  function handleError() {};
+
+  return {
+    //args needs to have properties localStream, gotStream, trace(optional), servers(optional)
+    init: function(args) {
+      var trace, servers, localStream, gotStream;
+      if (args.localStream == undefined) {
+        return "localStream is not defined";
+      }
+      if (args.gotStream == undefined) {
+        return "gotStream is not defined";
+      }
+      trace = args.trace || console.log;
+      servers = args.servers || null;
+      localStream = args.localStream;
+      gotStream = args.gotStream;
+      initialize(trace);
+      createConnection(servers, gotStream, localStream);
+    },
+
+    close: function() {
+      localPeerConnection.close();
+      remotePeerConnection.close();
+      localPeerConnection = null;
+      remotePeerConnection = null;
+    }
+  }
+})();

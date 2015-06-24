@@ -10,8 +10,6 @@ var hangupButton = document.querySelector('#hangup');
 var videosDiv = document.querySelector('#videos');
 var localStream;
 var remoteStream;
-var localPeerConnection;
-var remotePeerConnection;
 var isChannelReady;
 var isAudioCall;
 var isVideoCall;
@@ -55,7 +53,9 @@ function audioCall() {
     isAudioCall = true;
     getMedia(audioConstraints, gotAudioStream);
     setTimeout(function() {
-      createPeerConnection();
+      peerConnection.init({localStream: localStream,
+                          gotStream: gotRemoteAudioStream,
+                          trace: trace})
     }, 3000);
   } else {
     console.log('Something went wrong while starting audioCall');
@@ -69,7 +69,9 @@ function videoCall() {
     videosDiv.style.display = 'block';
     getMedia({audio: true, video: true}, gotVideoStream);
     setTimeout(function() {
-      createPeerConnection();
+      peerConnection.init({localStream: localStream,
+                          gotStream: gotRemoteVideoStream,
+                          trace: trace});
     }, 3000);
   } else {
     console.log('Something went wrong while starting videoCall');
@@ -78,10 +80,7 @@ function videoCall() {
 
 function hangup() {
   trace('Hanging up.');
-  localPeerConnection.close();
-  remotePeerConnection.close();
-  localPeerConnection = null;
-  remotePeerConnection = null;
+  peerConnection.close();
   hangupButton.disabled = true;
   audioCallButton.disabled = false;
   videoCallButton.disabled = false;
@@ -90,32 +89,6 @@ function hangup() {
   localVideo.src = '';
   remoteVideo.src = '';
   videosDiv.style.display = 'none';
-}
-
-function createPeerConnection() {
-  if (isAudioCall) {
-    createPeerConnection('audio');
-  } else {
-    createPeerConnection('video');
-  }
-}
-
-function createPeerConnection(type) {
-    //Using no signaling process atm
-    var servers = null;
-
-    localPeerConnection = new RTCPeerConnection(servers);
-    trace('Created local peer connection object.');
-    localPeerConnection.onicecandidate = gotLocalIceCandidate;
-
-    remotePeerConnection = new RTCPeerConnection(servers);
-    trace('Created remote peer connection objects.');
-    remotePeerConnection.onicecandidate = gotRemoteIceCandidate;
-    remotePeerConnection.onaddstream = (type === 'audio') ? gotRemoteAudioStream : gotRemoteVideoStream;
-
-    localPeerConnection.addStream(localStream);
-    trace('Added localstream to localPeerConnection');
-    localPeerConnection.createOffer(gotLocalDescription, handleError);
 }
 
 function cleanPriorAudioCallIfAny() {
@@ -191,34 +164,3 @@ function errorCallback(error) {
 function trace(text) {
   console.log((performance.now() / 1000).toFixed(3) + ': ' + text);
 }
-
-// It creates an offer to the remotePeer, where remotePeer generates answer with
-// localPeer's description which creates the session for them
-function gotLocalDescription(description) {
-  localPeerConnection.setLocalDescription(description);
-  trace('Offer from localPeerConnection: \n', description.sdp);
-  remotePeerConnection.setRemoteDescription(description);
-  remotePeerConnection.createAnswer(gotRemoteDescription, handleError);
-}
-
-function gotRemoteDescription(description) {
-  remotePeerConnection.setLocalDescription(description);
-  trace('Answer from remotePeerConnection: \n', description.sdp);
-  localPeerConnection.setRemoteDescription(description);
-}
-
-function gotLocalIceCandidate(event) {
-  if (event.candidate) {
-    remotePeerConnection.addIceCandidate(new RTCIceCandidate(event.candidate));
-    trace('Local ICE candidate: \n', event.candidate.candidate);
-  }
-}
-
-function gotRemoteIceCandidate(event) {
-  if (event.candidate) {
-    localPeerConnection.addIceCandidate(new RTCIceCandidate(event.candidate));
-    trace('Remote ICE candidate: \n', event.candidate.candidate);
-  }
-}
-
-function handleError() {};
