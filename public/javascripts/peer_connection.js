@@ -1,9 +1,5 @@
-var peerConnection = (function() {
+var makePeerConnection = function() {
   var trace, localPeerConnection, remotePeerConnection;
-
-  function initialize(t) {
-    trace = t;
-  }
 
   function createConnection(servers, gotStream, localStream) {
     //Using no signaling process atm
@@ -53,18 +49,19 @@ var peerConnection = (function() {
   return {
     //args needs to have properties localStream, gotStream, trace(optional), servers(optional)
     init: function(args) {
-      var trace, servers, localStream, gotStream;
+      var servers, localStream, gotStream;
       if (args.localStream == undefined) {
         return "localStream is not defined";
       }
       if (args.gotStream == undefined) {
         return "gotStream is not defined";
       }
-      trace = args.trace || console.log;
+      trace = args.trace || function(message) {
+        console.log(message);
+      };
       servers = args.servers || null;
       localStream = args.localStream;
       gotStream = args.gotStream;
-      initialize(trace);
       createConnection(servers, gotStream, localStream);
     },
 
@@ -75,4 +72,4 @@ var peerConnection = (function() {
       remotePeerConnection = null;
     }
   }
-})();
+};

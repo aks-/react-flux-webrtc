@@ -19,6 +19,7 @@ var isRemoteUserPresent = false;
 var hasAudioSupport = false;
 var hasVideoSupport = false;
 var audioConstraints = {audio: true};
+var peerConnection = new makePeerConnection();
 
 videoCallButton.disabled = true;
 audioCallButton.disabled = true;
@@ -53,9 +54,7 @@ function audioCall() {
     isAudioCall = true;
     getMedia(audioConstraints, gotAudioStream);
     setTimeout(function() {
-      peerConnection.init({localStream: localStream,
-                          gotStream: gotRemoteAudioStream,
-                          trace: trace})
+      peerConnection.init({localStream: localStream, gotStream: gotRemoteAudioStream});
     }, 3000);
   } else {
     console.log('Something went wrong while starting audioCall');
@@ -69,9 +68,7 @@ function videoCall() {
     videosDiv.style.display = 'block';
     getMedia({audio: true, video: true}, gotVideoStream);
     setTimeout(function() {
-      peerConnection.init({localStream: localStream,
-                          gotStream: gotRemoteVideoStream,
-                          trace: trace});
+      peerConnection.init({localStream: localStream, gotStream: gotRemoteVideoStream});
     }, 3000);
   } else {
     console.log('Something went wrong while starting videoCall');
