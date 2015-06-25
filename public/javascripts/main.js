@@ -29,7 +29,12 @@ function start() {
       trace('Using audio device: ', stream.getAudioTracks()[0].label);
     };
   };
-  getUserMedia({audio: true, video: true}, successCallback, getUserMediaNotSupportedCallback);
+  try{
+    getUserMedia({audio: true, video: true}, successCallback, getUserMediaNotSupportedCallback);
+  } catch(e) {
+    //Show an error page with message
+    document.querySelector("#error-message").innerHtml = "Aww! Something went wrong while making call. :("
+  }
 }
 
 function makeAudioCall() {

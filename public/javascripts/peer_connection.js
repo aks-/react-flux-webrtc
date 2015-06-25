@@ -62,12 +62,21 @@ var makePeerConnection = function() {
       servers = args.servers || null;
       localStream = args.localStream;
       gotStream = args.gotStream;
-      createConnection(servers, gotStream, localStream);
+      try {
+        createConnection(servers, gotStream, localStream);
+      } catch(e) {
+        //Show an error page with message
+        document.querySelector("#error-message").innerHtml = "Aww! Something went wrong while making connection to your remote buddy. :("
+      }
     },
 
     close: function() {
-      localPeerConnection.close();
-      remotePeerConnection.close();
+      try {
+        localPeerConnection.close();
+        remotePeerConnection.close();
+      } catch(e) {
+        document.querySelector("#error-message").innerHtml = "Aww! Something went wrong while making connection to your remote buddy. :("
+      }
       localPeerConnection = null;
       remotePeerConnection = null;
     }

@@ -65,12 +65,21 @@ var call = function() {
       getMedia = args.getMedia;
       peerConnection = args.peerConnection;
       callConstraints = args.constraints;
-      call();
+      try {
+        call();
+      } catch(e)  {
+        document.querySelector("#error-message").innerHtml = "Aww! Something went wrong while making call. :("
+      }
     },
 
     hang: function(connection) {
       trace('Hanging up!');
-      peerConnection.close();
+      try {
+        peerConnection.close();
+      } catch(e) {
+        //send this message to server logs as well
+        console.log('Something went wrong while hanging call');
+      }
       hangupButton.disabled = true;
       callButton.disabled = false;
       localElement.src = '';
