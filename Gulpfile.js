@@ -24,7 +24,7 @@ gulp.task('browserify', ['javascript'], function() {
   return gulp.src('public/build/javascripts/main.js')
   .pipe(browserify({transform:['envify']}))
   .pipe(rename('browserified.js'))
-  .pipe(gulp.dest('public/build/javascript'))
+  .pipe(gulp.dest('public/build/javascripts'))
   .pipe(uglify())
   .pipe(rename({suffix: '.min'}))
   .pipe(gulp.dest('public/build/javascripts/'))
