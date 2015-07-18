@@ -21,9 +21,9 @@ gulp.task('javascript', function() {
 });
 
 gulp.task('browserify', ['javascript'], function() {
-  return gulp.src('public/build/javascripts/main.js')
+  return gulp.src('public/build/javascripts/client.js')
   .pipe(browserify({transform:['envify']}))
-  .pipe(rename('browserified.js'))
+  .pipe(rename('browserifiedClient.js'))
   .pipe(gulp.dest('public/build/javascripts'))
   .pipe(uglify())
   .pipe(rename({suffix: '.min'}))
