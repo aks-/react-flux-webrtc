@@ -6,7 +6,7 @@ var CallButtons = require('./CallButtons.react');
 var WebrtcApp = React.createClass({
   render: function() {
     return (
-      <div className="container">
+      <div className="main-section">
         <div id="error-message"></div>
         <VideoSection />
         <AudioSection />
