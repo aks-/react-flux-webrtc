@@ -4,8 +4,8 @@ var AudioSection = React.createClass({
   render: function() {
     return (
       <div id="audios">
-        <video id="localAudio" autoplay muted></video>
-        <video id="remoteAudio" autoplay></video>
+        <video id="localAudio" autoPlay muted></video>
+        <video id="remoteAudio" autoPlay></video>
       </div>
     );
   }

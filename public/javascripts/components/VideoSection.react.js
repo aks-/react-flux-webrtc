@@ -4,8 +4,8 @@ var VideoSection = React.createClass({
   render: function() {
     return (
       <div id="videos">
-        <video id="localVideo" autoplay muted></video>
-        <video id="remoteVideo" autoplay></video>
+        <video id="localVideo" autoPlay muted></video>
+        <video id="remoteVideo" autoPlay></video>
       </div>
     );
   }
