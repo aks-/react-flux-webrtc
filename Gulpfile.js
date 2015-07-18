@@ -8,33 +8,33 @@ var minifycss = require('gulp-minify-css');
 var nodemon = require('gulp-nodemon');
 
 gulp.task('clean', function() {
-  return gulp.src(['public/build/javascripts/*'], {read: false}).pipe(clean());
+  return gulp.src(['build/javascripts/*'], {read: false}).pipe(clean());
 });
 
 gulp.task('javascript', function() {
   return gulp.src('public/javascripts/**/*.js')
   .pipe(react())
-  .pipe(gulp.dest('public/build/javascripts/'))
+  .pipe(gulp.dest('build/javascripts/'))
   .pipe(uglify())
   .pipe(rename({suffix: '.min'}))
-  .pipe(gulp.dest('public/build/javascripts'));
+  .pipe(gulp.dest('build/javascripts'));
 });
 
 gulp.task('browserify', ['javascript'], function() {
-  return gulp.src('public/build/javascripts/client.js')
+  return gulp.src('build/javascripts/client.js')
   .pipe(browserify({transform:['envify']}))
   .pipe(rename('browserifiedClient.js'))
-  .pipe(gulp.dest('public/build/javascripts'))
+  .pipe(gulp.dest('build/javascripts'))
   .pipe(uglify())
   .pipe(rename({suffix: '.min'}))
-  .pipe(gulp.dest('public/build/javascripts/'))
+  .pipe(gulp.dest('build/javascripts/'))
 });
 
 gulp.task('styles', function() {
   return gulp.src('public/stylesheets/**/*.css')
-  .pipe(gulp.dest('public/build/css/'))
+  .pipe(gulp.dest('build/css/'))
   .pipe(rename({suffix: '.min'}))
-  .pipe(gulp.dest('public/build/css/'));
+  .pipe(gulp.dest('build/css/'));
 });
 
 //Start me
