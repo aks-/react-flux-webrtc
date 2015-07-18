@@ -9,7 +9,14 @@ var call = function() {
   getMedia,
   peerConnection,
   hangupButton,
-  callConstraints;
+  callConstraints,
+  //Tell remote that we would like to receive video and audio
+  remoteRequestConstraints = {
+    'mandatory': {
+      'OfferToReceiveAudio': true,
+      'OfferToReceiveVideo': true
+    }
+  };
   var videosDiv = document.querySelector('#videos');
 
   function call() {
