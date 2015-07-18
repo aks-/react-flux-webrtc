@@ -4,7 +4,6 @@ var AudioSection = require('./AudioSection.react');
 var CallButtons = require('./CallButtons.react');
 
 var WebrtcApp = React.createClass({
-
   render: function() {
     return (
       <div className="container">
@@ -15,5 +14,6 @@ var WebrtcApp = React.createClass({
       </div>
     );
   }
-
 });
+
+module.exports = WebrtcApp;
