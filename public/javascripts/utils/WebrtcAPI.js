@@ -8,11 +8,15 @@ var localPeerConnection, remotePeerConnection;
 var WebrtcAPI = {
   makeAudioCall: function() {
     var constraints = {audio: true};
-    this._call(constraints, WebrtcAppConstants.ATTACH_AUDIO_SOURCE);
+    var localEvent = WebrtcAppConstants.ATTACH_LOCAL_AUDIO_SOURCE;
+    var remoteEvent = WebrtcAppConstants.ATTACH_REMOTE_AUDIO_SOURCE;
+    this._call(constraints, localEvent, remoteEvent);
   },
   makeVideoCall: function() {
     var constraints = {video: true, audio: true};
-    this._call(constraints, WebrtcAppConstants.ATTACH_VIDEO_SOURCE);
+    var localEvent = WebrtcAppConstants.ATTACH_LOCAL_VIDEO_SOURCE;
+    var remoteEvent = WebrtcAppConstants.ATTACH_REMOTE_VIDEO_SOURCE;
+    this._call(constraints, localEvent, remoteEvent);
   },
   hangup: function() {
     bluebird.promisify(function() {
@@ -29,7 +33,7 @@ var WebrtcAPI = {
       //TODO attach error message
     });
   },
-  _call: function(constraints, event) {
+  _call: function(constraints, event, remoteEvent) {
     var getUserMedia = navigator.getUserMedia;
     bluebird.promisify(getUserMedia(constraints))
     .then(gotStream)
@@ -62,9 +66,9 @@ function createConnection(obj) {
   localPeerConnection.createOffer(gotLocalDescription, handleError);
 }
 
-function gotRemoteStream(evt, event) {
+function gotRemoteStream(evt, remoteEvent) {
   var objectUrl = URL.createObjectURL(evt.stream);
-  CallActionCreators.attachToSrc(objectUrl, event);
+  CallActionCreators.attachToSrc(objectUrl, remoteEvent);
 }
 
 function gotLocalDescription(description) {

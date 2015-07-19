@@ -6,7 +6,9 @@ module.exports = {
     MAKE_VIDEO_CALL: null,
     HANG_UP: null,
     AFTER_CALL_HANGED: null,
-    ATTACH_AUDIO_SOURCE: null,
-    ATTACH_VIDEO_SOURCE: null
+    ATTACH_LOCAL_AUDIO_SOURCE: null,
+    ATTACH_LOCAL_VIDEO_SOURCE: null,
+    ATTACH_REMOTE_AUDIO_SOURCE: null,
+    ATTACH_REMOTE_VIDEO_SOURCE: null
   });
 }
