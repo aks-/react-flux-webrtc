@@ -1,16 +1,17 @@
 var bluebird = require('bluebird');
 var WebrtcAppDispatcher = require('../dispatcher/WebrtcAppDispatcher');
+var WebrtcAppConstants = require('../constants/WebrtcAppConstrants');
 var serverConfig = null;
 var localPeerConnection, remotePeerConnection;
 
 var WebrtcAPI = {
   makeAudioCall: function() {
     var constraints = {audio: true};
-    this._call(constraints, MAKE_AUDIO_CALL);
+    this._call(constraints, WebrtcAppConstants.ATTACH_AUDIO_SOURCE);
   },
   makeVideoCall: function() {
     var constraints = {video: true, audio: true};
-    this._call(constraints, MAKE_VIDEO_CALL);
+    this._call(constraints, WebrtcAppConstants.ATTACH_VIDEO_SOURCE);
   },
   hangup: function() {
     call.hang();
@@ -20,8 +21,8 @@ var WebrtcAPI = {
     .then(gotStream)
     .then(function(stream) {
       var objectUrl = URL.createObjectURL(stream);
-      //TODO dispatch it to components to change the view
-      return stream;
+      CallActionCreators.attachToSrc(objectUrl, event);
+      return {stream: stream, event: event};
     })
     .then(createConnection)
     .fail(function() {
@@ -36,7 +37,8 @@ function gotStream(stream) {
   return localStream;
 }
 
-function createConnection(stream) {
+function createConnection(obj) {
+  var stream = obj.stream, event = obj.event;
   localPeerConnection = new RTCPeerConnection(serverConfig);
   localPeerConnection.onicecandidate = gotLocalIceCandidate;
   remotePeerConnection = new RTCPeerConnection(serverConfig);
@@ -46,9 +48,9 @@ function createConnection(stream) {
   localPeerConnection.createOffer(gotLocalDescription, handleError);
 }
 
-function gotRemoteStream(evt) {
+function gotRemoteStream(evt, event) {
   var objectUrl = URL.createObjectURL(evt.stream);
-  //TODO dispatch it to component of remote video
+  CallActionCreators.attachToSrc(objectUrl, event);
 }
 
 function gotLocalDescription(description) {
@@ -79,17 +81,5 @@ function gotRemoteIceCandidate(event) {
 }
 
 function handleError() {};
-
-function setAudioVideoSupport(stream) {
-  if (stream.getVideoTracks().length > 0) {
-    videoSupport = true;
-    console.log('Using video device: ', stream.getVideoTracks()[0].label);
-  }
-  if (stream.getAudioTracks().length > 0) {
-    audioSupport = true;
-    console.log('Using video device: ', stream.getAudioTracks()[0].label);
-  }
-  return stream;
-}
 
 module.exports = WebrtcAPI;
