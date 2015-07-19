@@ -1,57 +1,38 @@
 var React = require('react');
+var assign = require('object-assign');
+var CallStore = require('../stores/CallStore');
 var CallActionCreators = require('../actions/CallActionCreators');
+var ListenerMixin = require('./ListenerMixin.js');
 
-var startCallState = {
-  audioEnabled: false,
-  videoEnabled: false,
-  hangUpEnabled: true
-};
-var hangUpState = {
-  audioEnabled: true,
-  videoEnabled: true,
-  hangUpEnabled: false
-};
+function getState() {
+  return CallStore.getControlsState()
+}
 
 var Controls = React.createClass({
+  mixins: [ListenerMixin],
   getInitialState: function() {
-    return {
-      audioEnabled: true,
-      videoEnabled: true,
-      hangUpEnabled: false
-    };
+    return assign({}, getState());
   },
   render: function() {
-    var audioEnabled = this.state.audioEnabled;
-    var videoEnabled = this.state.videoEnabled;
-    var hangUpEnabled = this.state.hangUpEnabled;
+    var audioDisabled = this.state.type ? true : false;
+    var videoDisabled = this.state.type ? true : false;
+    var hangUpDisabled = this.state.type ? false: true;
     return (
       <div id="controls">
-        <button id="audioCall" onClick={this.initiateAudioCall} disabled={!audioEnabled}>Audio Call</button>
-        <button id="videoCall" onClick={this.initiateVideoCall} disabled={!videoEnabled}>Video Call</button>
-        <button id="hangup" onClick={this.hangup} disabled={!hangUpEnabled}>Hangup</button>
+        <button id="audioCall" onClick={this.initiateAudioCall} disabled={audioDisabled}>Audio Call</button>
+        <button id="videoCall" onClick={this.initiateVideoCall} disabled={videoDisabled}>Video Call</button>
+        <button id="hangup" onClick={this.hangup} disabled={hangUpDisabled}>Hangup</button>
       </div>
     );
   },
   this.initiateAudioCall: function() {
     var action = CallActionCreators.makeAudioCall;
-    this._initiateAction(action, 'call');
   },
   this.initialteVideoCall: function() {
     var action = CallActionCreators.makeVideoCall;
-    this._initiateAction(action, 'call');
   },
   this.hangUp: function() {
     var action = CallActionCreators.hangCall;
-    this._initiateAction(action);
-  },
-  this._initiateAction: function(action, type) {
-    if (type && type == 'call') {
-      var state = startCallState;
-    } else {
-      var state = hangUpState;
-    }
-    action();
-    this.setState(state);
   },
 });
 

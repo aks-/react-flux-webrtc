@@ -2,7 +2,7 @@ var React = require('react');
 var VideoElement = require('./VideoElement.react');
 var CallStore = require('../stores/CallStore');
 var MakeCallActionCreators = require('../actions/MakeCallActionCreators');
-var ListenerMixin = require('./ListenerMixinForLocalAudioVideo');
+var ListenerMixin = require('./ListenerMixin');
 
 function getLocalVideoStateFromStore() {
   return CallStore.getLocalVideo();

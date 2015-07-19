@@ -1,7 +1,7 @@
 var React = require('react');
 var CallStore = require('../stores/CallStore');
 var AudioElement = require('./AudioElement.react');
-var ListenerMixin = require('./ListenerMixinForLocalAudioVideo');
+var ListenerMixin = require('./ListenerMixin');
 
 function getRemoteAudioStateFromStore() {
   return CallStore.getRemoteAudio();
