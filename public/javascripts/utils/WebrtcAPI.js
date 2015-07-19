@@ -1,6 +1,7 @@
 var bluebird = require('bluebird');
 var WebrtcAppDispatcher = require('../dispatcher/WebrtcAppDispatcher');
 var WebrtcAppConstants = require('../constants/WebrtcAppConstrants');
+var CallActionCreators = require('../actions/CallActionCreators');
 var serverConfig = null;
 var localPeerConnection, remotePeerConnection;
 
@@ -14,7 +15,19 @@ var WebrtcAPI = {
     this._call(constraints, WebrtcAppConstants.ATTACH_VIDEO_SOURCE);
   },
   hangup: function() {
-    call.hang();
+    bluebird.promisify(function() {
+      localPeerConnection = null;
+      remotePeerConnection = null;
+    })
+    .then(function() {
+      //TODO add action to change buttons state
+      CallActionCreators.afterCallHanged();
+      console.log('disconnected succesfully');
+    })
+    .fail(function(error) {
+      console.log('Something went wrong ' + error.message);
+      //TODO attach error message
+    });
   },
   _call: function(constraints, event) {
     var getUserMedia = navigator.getUserMedia;

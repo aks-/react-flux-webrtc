@@ -7,20 +7,33 @@ var ActionTypes = WebrtcAppConstants.ActionTypes;
 var CHANGE_EVT = 'change';
 
 var CallStore = assign({}, EventEmitter.prototype, {
-  //add date time logic etc
+  emitChange: function() {
+    this.emit(CHANGE_EVT);
+  },
+  addChangeListener: function() {
+    this.on(CHANGE_EVT, callback);
+  },
+  removeChangeListener: function() {
+    this.on(CHANGE_EVT, callback);
+  }
 });
 
-WebrtcAppDispatcher.register(function(action) {
+WebrtcStore.dispatchToken = WebrtcAppDispatcher.register(function(action) {
   switch(action.type) {
     case ActionTypes.MAKE_AUDIO_CALL:
-      //make a call
-      //add date time
+      //made a call change the button state
       break;
     case ActionTypes.MAKE_VIDEO_CALL:
       //MAKE A CALL
       break;
     case ActionTypes.HANG_UP:
       //hang up
+      break;
+    case ActionTypes.ATTACH_AUDIO_SOURCE:
+      //attach it
+      break;
+    case ActionTypes.ATTACH_VIDEO_SOURCE:
+      //attach it
       break;
   }
 });

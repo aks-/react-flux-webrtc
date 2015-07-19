@@ -6,7 +6,6 @@ var ActionTypes = WebrtcAppConstants.ActionTypes;
 
 module.exports = {
   makeAudioCall: function() {
-    //make call and use promises
     WebrtcAPI.makeAudioCall();
     WebrtcAppDispatcher.dispatch({
       type: ActionTypes.MAKE_AUDIO_CALL
@@ -21,6 +20,11 @@ module.exports = {
   hangCall: function() {
     WebrtcAppDispatcher.dispatch({
       type: ActionTypes.HANG_UP
+    });
+  },
+  afterCallHanged: function() {
+    WebrtcAppDispatcher.dispatch({
+      type: ActionTypes.AFTER_CALL_HANGED
     });
   },
   attachToSrc: function(url, event) {
