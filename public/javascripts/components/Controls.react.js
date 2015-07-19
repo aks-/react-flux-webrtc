@@ -12,7 +12,7 @@ var hangUpState = {
   hangUpEnabled: false
 };
 
-var CallButtons = React.createClass({
+var Controls = React.createClass({
   getInitialState: function() {
     return {
       audioEnabled: true,

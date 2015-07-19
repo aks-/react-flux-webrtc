@@ -1,7 +1,7 @@
 var React = require('react');
 var VideoSection = require('./VideoSection.react');
 var AudioSection = require('./AudioSection.react');
-var CallButtons = require('./CallButtons.react');
+var Controls = require('./Controls.react');
 
 var WebrtcApp = React.createClass({
   render: function() {
@@ -10,7 +10,7 @@ var WebrtcApp = React.createClass({
         <div id="error-message"></div>
         <VideoSection />
         <AudioSection />
-        <CallButtons />
+        <Controls />
       </div>
     );
   }
