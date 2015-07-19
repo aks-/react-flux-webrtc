@@ -6,16 +6,6 @@ var serverConfig = null;
 var localPeerConnection, remotePeerConnection;
 
 var WebrtcAPI = {
-  start: function() { 
-    var constraints = {audio: true, video: true};
-    bluebird.promisify(getUserMedia(constraints))
-    .then(function(stream) {
-      setAudioVideoSupport(stream);
-    })
-    .fail(function() {
-      //TODO create error-message component and change starte using dispatcher
-    });
-  },
   audioCall: function() {
     bluebird.promisify(getUserMedia(constraints))
     .then(function(stream) {
