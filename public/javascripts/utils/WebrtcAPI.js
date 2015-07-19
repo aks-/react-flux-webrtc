@@ -17,6 +17,7 @@ var WebrtcAPI = {
     call.hang();
   },
   _call: function(constraints, event) {
+    var getUserMedia = navigator.getUserMedia;
     bluebird.promisify(getUserMedia(constraints))
     .then(gotStream)
     .then(function(stream) {
