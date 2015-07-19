@@ -5,10 +5,10 @@ var ActionTypes = WebrtcAppConstants.ActionTypes;
 
 module.exports = {
   makeAudioCall: function() {
+    //make call and use promises
     WebrtcAppDispatcher.dispatch({
       type: ActionTypes.MAKE_AUDIO_CALL
     });
-    //Do db related stuff here
   },
   makeVideoCall: function() {
      WebrtcAppDispatcher.dispatch({
