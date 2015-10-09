@@ -1,6 +1,6 @@
 var gulp = require('gulp');
 var clean = require('gulp-clean');
-var react = require('gulp-react');
+var babelify = require('babelify');
 var uglify = require('gulp-uglify');
 var rename = require('gulp-rename');
 var browserify = require('gulp-browserify');
@@ -11,23 +11,23 @@ gulp.task('clean', function() {
   return gulp.src(['build/javascripts/*'], {read: false}).pipe(clean());
 });
 
-gulp.task('javascript', function() {
+gulp.task('javascript', function() { 
   return gulp.src('public/javascripts/**/*.js')
-  .pipe(react())
+  .pipe(browserify({transform: ['babelify']}))
   .pipe(gulp.dest('build/javascripts/'))
-  .pipe(uglify())
+  .pipe(uglify({mangle: false}))
   .pipe(rename({suffix: '.min'}))
   .pipe(gulp.dest('build/javascripts'));
-});
+}); 
 
 gulp.task('browserify', ['javascript'], function() {
   return gulp.src('build/javascripts/client.js')
-  .pipe(browserify({transform:['envify']}))
+  .pipe(browserify({transform:['babelify']}))
   .pipe(rename('browserifiedClient.js'))
   .pipe(gulp.dest('build/javascripts'))
   .pipe(uglify())
   .pipe(rename({suffix: '.min'}))
-  .pipe(gulp.dest('build/javascripts/'))
+  .pipe(gulp.dest('build/javascripts/'));
 });
 
 gulp.task('styles', function() {
