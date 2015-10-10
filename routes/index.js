@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var React = require('react');
-var WebrtcApp = React.createFactory(require('../build/javascripts/components/WebrtcApp.react.min'));
+var WebrtcApp = React.createFactory(require('../build/javascripts/client.min'));
 
 /* GET home page. */
 router.get('/', function(req, res, next) {

@@ -84,7 +84,7 @@ var CallStore = assign({}, EventEmitter.prototype, {
   }
 });
 
-WebrtcStore.dispatchToken = WebrtcAppDispatcher.register(function(action) {
+CallStore.dispatchToken = WebrtcAppDispatcher.register(function(action) {
   switch(action.type) {
     case ActionTypes.MAKE_AUDIO_CALL:
       _callMode = 'audio';

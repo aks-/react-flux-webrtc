@@ -36,4 +36,4 @@ var Controls = React.createClass({
   },
 });
 
-module.exports = CallButtons;
+module.exports = Controls;
