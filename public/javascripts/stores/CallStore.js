@@ -1,5 +1,5 @@
 var WebrtcAppDispatcher = require('../dispatcher/WebrtcAppDispatcher');
-var WebrtcAppConstants == require('../constants/WebrtcAppConstants');
+var WebrtcAppConstants = require('../constants/WebrtcAppConstants');
 var EventEmitter = require('events').EventEmitter;
 var assign = require('object-assign');
 

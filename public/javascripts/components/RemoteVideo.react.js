@@ -18,6 +18,7 @@ var RemoteVideo = React.createClass({
         <VideoElement
           src={video.src}
           muted={video.muted}
+        />
       </div>
     );
   }

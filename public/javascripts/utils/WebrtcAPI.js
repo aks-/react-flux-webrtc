@@ -1,6 +1,6 @@
 var bluebird = require('bluebird');
 var WebrtcAppDispatcher = require('../dispatcher/WebrtcAppDispatcher');
-var WebrtcAppConstants = require('../constants/WebrtcAppConstrants');
+var WebrtcAppConstants = require('../constants/WebrtcAppConstants');
 var CallActionCreators = require('../actions/CallActionCreators');
 var serverConfig = null;
 var localPeerConnection, remotePeerConnection;

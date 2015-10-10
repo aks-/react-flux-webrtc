@@ -19,19 +19,19 @@ var Controls = React.createClass({
     var hangUpDisabled = this.state.type ? false: true;
     return (
       <div id="controls">
-        <button id="audioCall" onClick={this.initiateAudioCall} disabled={audioDisabled}>Audio Call</button>
-        <button id="videoCall" onClick={this.initiateVideoCall} disabled={videoDisabled}>Video Call</button>
-        <button id="hangup" onClick={this.hangup} disabled={hangUpDisabled}>Hangup</button>
+      <button id="audioCall" onClick={this.initiateAudioCall} disabled={audioDisabled}>Audio Call</button>
+      <button id="videoCall" onClick={this.initiateVideoCall} disabled={videoDisabled}>Video Call</button>
+      <button id="hangup" onClick={this.hangup} disabled={hangUpDisabled}>Hangup</button>
       </div>
     );
   },
-  this.initiateAudioCall: function() {
+  initiateAudioCall: function() {
     var action = CallActionCreators.makeAudioCall;
   },
-  this.initialteVideoCall: function() {
+  initialteVideoCall: function() {
     var action = CallActionCreators.makeVideoCall;
   },
-  this.hangUp: function() {
+  hangUp: function() {
     var action = CallActionCreators.hangCall;
   },
 });

@@ -10,5 +10,5 @@ module.exports = {
     ATTACH_LOCAL_VIDEO_SOURCE: null,
     ATTACH_REMOTE_AUDIO_SOURCE: null,
     ATTACH_REMOTE_VIDEO_SOURCE: null
-  });
-}
+  })
+};

@@ -1,7 +1,7 @@
 var React = require('react');
 var VideoElement = require('./VideoElement.react');
 var CallStore = require('../stores/CallStore');
-var MakeCallActionCreators = require('../actions/MakeCallActionCreators');
+var MakeCallActionCreators = require('../actions/CallActionCreators');
 var ListenerMixin = require('./ListenerMixin');
 
 function getLocalVideoStateFromStore() {

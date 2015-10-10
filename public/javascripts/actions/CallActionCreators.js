@@ -1,5 +1,5 @@
 var WebrtcAppDispatcher = require('../dispatcher/WebrtcAppDispatcher');
-var WebrtcAppConstants = require('../dispatcher/WebrtcAppConstants');
+var WebrtcAppConstants = require('../constants/WebrtcAppConstants');
 var WebrtcAPI = require('../utils/WebrtcAPI');
 
 var ActionTypes = WebrtcAppConstants.ActionTypes;
