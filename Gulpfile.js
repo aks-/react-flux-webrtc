@@ -1,30 +1,32 @@
 var gulp = require('gulp');
-var clean = require('gulp-clean');
+var browserify = require('browserify');
 var babelify = require('babelify');
 var uglify = require('gulp-uglify');
+var source = require('vinyl-source-stream');
 var rename = require('gulp-rename');
-var browserify = require('gulp-browserify');
-var minifycss = require('gulp-minify-css');
+var clean = require('gulp-clean');
+var minifyCss = require('gulp-minify-css');
 var nodemon = require('gulp-nodemon');
+var runSequence = require('run-sequence');
 
 gulp.task('clean', function() {
   return gulp.src(['build/javascripts/*'], {read: false}).pipe(clean());
 });
 
-gulp.task('javascript', function() { 
-  return gulp.src('public/javascripts/**/*.js')
-  .pipe(browserify({transform: ['babelify']}))
-  .pipe(gulp.dest('build/javascripts/'))
-  .pipe(uglify({mangle: false}))
-  .pipe(rename({suffix: '.min'}))
+gulp.task('javascript', function() {
+  return browserify({
+    entries: 'public/javascripts/client.js',
+    extensions: ['.react.js'],
+    debug: true
+  })
+  .transform(babelify)
+  .bundle()
+  .pipe(source('client.js'))
   .pipe(gulp.dest('build/javascripts'));
-}); 
+});
 
-gulp.task('browserify', ['javascript'], function() {
+gulp.task('browserify', function() {
   return gulp.src('build/javascripts/client.js')
-  .pipe(browserify({transform:['babelify']}))
-  .pipe(rename('browserifiedClient.js'))
-  .pipe(gulp.dest('build/javascripts'))
   .pipe(uglify())
   .pipe(rename({suffix: '.min'}))
   .pipe(gulp.dest('build/javascripts/'));
@@ -32,14 +34,14 @@ gulp.task('browserify', ['javascript'], function() {
 
 gulp.task('styles', function() {
   return gulp.src('public/stylesheets/**/*.css')
-  .pipe(gulp.dest('build/css/'))
+  .pipe(minifyCss({compatibility: 'ie8'}))
   .pipe(rename({suffix: '.min'}))
   .pipe(gulp.dest('build/css/'));
 });
 
 //Start me
-gulp.task('default', ['clean'], function() {
-  return gulp.start('browserify', 'styles');
+gulp.task('default', function() {
+  runSequence('clean', 'javascript', 'browserify', 'styles');
 });
 
 //for dev purpose
